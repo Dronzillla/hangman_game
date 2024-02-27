@@ -11,12 +11,35 @@ class HangmanGame:
     def __init__(self):
         self.score = 0
         self.guesses = []
+        self.inccorect = []
 
-    def get_random_word(self) -> str:
-        min_letters = 10
+        self.word = self.__get_random_word()
+
+    def __get_random_word(self) -> str:
+        min_letters = 6
         rw = RandomWords()
         word = rw.random_word(min_letter_count=min_letters)
+        print(word)
         return word
+
+    def show_word(self):
+        # Loop every letter in a word
+        for i in range(len(self.word)):
+            # Check if letter was already guessed and print it if so
+            if self.word[i] in self.guesses:
+                print(f"{self.word[i]}", end="")
+            # If letter was not guessed add it to incorrect list
+            else:
+                print("_", end="")
+        print("")
+
+    def show_inccorect_guesses(self) -> None:
+        result = "Inccorect letters: " + ", ".join(
+            (letter for letter in self.inccorect)
+        )
+        print(result)
+
+    def guess_a_letter(self, letter: str): ...
 
     def get_letter_from_user(self) -> str:
         letter = input("Guess a letter: ")
@@ -105,13 +128,12 @@ def main() -> None:
 
     game = HangmanGame()
 
-    word = game.get_random_word()
-    print(word)
-
     letter = game.get_letter_from_user()
     print(letter)
 
-    game.draw_hanged_man(6)
+    game.show_word()
+
+    # game.draw_hanged_man(6)
 
 
 if __name__ == "__main__":
