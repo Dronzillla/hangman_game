@@ -1,6 +1,28 @@
-class HangmanGame:
+from random_words import RandomWords
 
-    def draw_hanged_man(self, score=0):
+
+class HangmanGame:
+    # Get random word
+    def __init__(self):
+        self.level = None
+
+    def get_random_word(self) -> str:
+        min_letters = 10
+        rw = RandomWords()
+        word = rw.random_word(min_letter_count=min_letters)
+        return word
+
+    def show_game_instructions(self):
+        print("Welcome to deadman game")
+        print("")
+        print("The goal of the game is to guess a word by choosing letters. ")
+        print("You have 6 guesses in total to guess ")
+        print("Write 'start' to start the game")
+        print("")
+        print("Write 'exit' to exit from program or active game")
+        print("")
+
+    def draw_hanged_man(self, score=0) -> None:
         row = 11
         column = 7
 
@@ -62,6 +84,10 @@ class HangmanGame:
 def main() -> None:
 
     game = HangmanGame()
+
+    word = game.get_random_word()
+    print(word)
+
     game.draw_hanged_man(6)
 
 
