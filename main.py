@@ -1,16 +1,36 @@
 from random_words import RandomWords
+import re
+
+
+class GuessError(Exception):
+    pass
 
 
 class HangmanGame:
     # Get random word
     def __init__(self):
-        self.level = None
+        self.score = 0
+        self.guesses = []
 
     def get_random_word(self) -> str:
         min_letters = 10
         rw = RandomWords()
         word = rw.random_word(min_letter_count=min_letters)
         return word
+
+    def get_letter_from_user(self) -> str:
+        letter = input("Guess a letter: ")
+
+        if re.search(r"^[A-za-z]$", letter):
+            # Check if user already guessed that letter
+            letter = letter.lower()
+            if letter not in self.guesses:
+                self.guesses.append(letter)
+                return letter
+            else:
+                raise GuessError
+        else:
+            raise ValueError
 
     def show_game_instructions(self):
         print("Welcome to deadman game")
@@ -87,6 +107,9 @@ def main() -> None:
 
     word = game.get_random_word()
     print(word)
+
+    letter = game.get_letter_from_user()
+    print(letter)
 
     game.draw_hanged_man(6)
 
