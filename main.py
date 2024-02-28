@@ -10,6 +10,7 @@ class HangmanGame:
         self.inccorect_letters = []
         self.inccorect_words = []
         self.word = self.__get_random_word()
+        # print(self.word)
         self._game_won = False
 
     @property
@@ -21,10 +22,9 @@ class HangmanGame:
         self._game_won = game_won
 
     def __get_random_word(self) -> str:
-        min_letters = 6
+        min_letters = 4
         rw = RandomWords()
         word = rw.random_word(min_letter_count=min_letters)
-        print(word)
         return word
 
     def score_is_6(self) -> bool:
@@ -35,10 +35,6 @@ class HangmanGame:
 
     def print_game_won(self) -> None:
         print(f"CONGRATS! You have succesfully guessed the word '{self.word}'. ")
-        # print(
-        #     f"You have made {len(self.inccorect_letters)} inccorect guesses for letters."
-        # )
-        # print(f"and {len(self.inccorect_words)} inccorect guesses for words. ")
 
     def all_letters_guessed(self):
         for letter in self.word:
@@ -126,16 +122,6 @@ class HangmanGame:
             else:
                 raise ValueError
 
-    def show_game_instructions(self) -> None:
-        print("Welcome to deadman game")
-        print("")
-        print("The goal of the game is to guess a word by choosing letters. ")
-        print("You have 6 guesses in total to guess ")
-        print("Write 'start' to start the game")
-        print("")
-        print("Write 'exit' to exit from program or active game")
-        print("")
-
     def draw_hanged_man(self) -> None:
         row = 11
         column = 7
@@ -201,17 +187,29 @@ def main() -> None:
     while True:
         game.show_word()
         game.draw_hanged_man()
-        game.get_guess_from_user()
+
+        try:
+            game.get_guess_from_user()
+        except ValueError:
+            print("ERROR. Enter either a letter f.e. 'a' or a word f.e. 'apple'. ")
 
         if game.all_letters_guessed():
+            print(game.show_inccorect_letters())
+            print(game.show_inccorect_words())
+            game.draw_hanged_man()
             game.print_game_won()
             break
 
         if game.game_won:
+            print(game.show_inccorect_letters())
+            print(game.show_inccorect_words())
+            game.draw_hanged_man()
             game.print_game_won()
             break
 
         if game.score_is_6():
+            print(game.show_inccorect_letters())
+            print(game.show_inccorect_words())
             game.draw_hanged_man()
             game.print_game_over()
             break
