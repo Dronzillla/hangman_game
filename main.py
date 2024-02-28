@@ -24,6 +24,7 @@ class HangmanGame:
 
     def show_word(self) -> None:
         # Loop every letter in a word
+        print(f"Guess a word: ", end="")
         for i in range(len(self.word)):
             # Check if letter was already guessed and print it if so
             if self.word[i] in self.correct:
@@ -32,36 +33,52 @@ class HangmanGame:
             else:
                 print("_", end="")
         print("")
+        print(f"{self.show_inccorect_letters()}")
+        print(f"{self.show_inccorect_words()}", end="")
+        print("")
 
-    def show_inccorect_guesses(self) -> None:
+    def show_inccorect_letters(self) -> None:
         result = "Inccorect letters: " + ", ".join(
             (letter for letter in self.inccorect)
         )
-        print(result)
+        return result
+
+    def show_inccorect_words(self) -> None:
+        result = "Inccorect words: " + ", ".join(
+            (word for word in self.inccorect_words)
+        )
+        return result
 
     def guess_a_word(self, word: str) -> None:
         # Check for
         if word != self.word:
             # Check if word was not already guessed
             if word not in self.inccorect_words:
+                print(f"'{word}' is an inccorect guess for a word. ")
                 self.inccorect_words.append(word)
                 self.score += 1
             else:
-                print("You already guessed this word")
+                print(f"Aready guessed. '{word}' is an inccorect guess for a word. ")
         else:
-            print("Correct answer")
+            print(f"{word} is a correct guess for a word. ")
 
     def guess_a_letter(self, letter: str) -> None:
         # Check if letter is in a word
         if letter in self.word:
             # Check if letter was not guessed and append if so append to correct list
             if letter not in self.correct:
+                print(f"'{letter}' is in a word. ")
                 self.correct.append(letter)
             else:
-                print("You already guessed this letter")
+                print(f"Already guessed. '{letter}' is in a word. ")
         else:
-            self.inccorect.append(letter)
-            self.score += 1
+            # Check if letter was not already guessed
+            if letter not in self.inccorect:
+                print(f"'{letter}' is NOT in a word. ")
+                self.inccorect.append(letter)
+                self.score += 1
+            else:
+                print(f"Already guessed. '{letter}' is NOT in a word. ")
 
     def get_guess_from_user(self) -> None:
         word = input("Guess a letter or a word: ")
@@ -159,11 +176,10 @@ def main() -> None:
 
     while True:
 
+        game.show_word()
         game.draw_hanged_man()
 
         game.get_guess_from_user()
-
-        game.show_word()
 
 
 if __name__ == "__main__":
