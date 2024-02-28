@@ -2,18 +2,23 @@ from random_words import RandomWords
 import re
 
 
-class GuessError(Exception):
-    pass
-
-
 class HangmanGame:
     # Get random word
-    def __init__(self):
+    def __init__(self) -> None:
         self.score = 0
-        self.correct = []
-        self.inccorect = []
+        self.correct_letters = []
+        self.inccorect_letters = []
         self.inccorect_words = []
         self.word = self.__get_random_word()
+        self._game_won = False
+
+    @property
+    def game_won(self):
+        return self._game_won
+
+    @game_won.setter
+    def game_won(self, game_won):
+        self._game_won = game_won
 
     def __get_random_word(self) -> str:
         min_letters = 6
@@ -22,12 +27,31 @@ class HangmanGame:
         print(word)
         return word
 
+    def score_is_6(self) -> bool:
+        return self.score == 6
+
+    def print_game_over(self) -> None:
+        print(f"GAME OVER! Word to guess was '{self.word}'. ")
+
+    def print_game_won(self) -> None:
+        print(f"CONGRATS! You have succesfully guessed the word '{self.word}'. ")
+        # print(
+        #     f"You have made {len(self.inccorect_letters)} inccorect guesses for letters."
+        # )
+        # print(f"and {len(self.inccorect_words)} inccorect guesses for words. ")
+
+    def all_letters_guessed(self):
+        for letter in self.word:
+            if letter not in self.correct_letters:
+                return False
+        return True
+
     def show_word(self) -> None:
         # Loop every letter in a word
         print(f"Guess a word: ", end="")
         for i in range(len(self.word)):
             # Check if letter was already guessed and print it if so
-            if self.word[i] in self.correct:
+            if self.word[i] in self.correct_letters:
                 print(f"{self.word[i]}", end="")
             # If letter was not guessed add it to incorrect list
             else:
@@ -39,7 +63,7 @@ class HangmanGame:
 
     def show_inccorect_letters(self) -> None:
         result = "Inccorect letters: " + ", ".join(
-            (letter for letter in self.inccorect)
+            (letter for letter in self.inccorect_letters)
         )
         return result
 
@@ -60,22 +84,23 @@ class HangmanGame:
             else:
                 print(f"Aready guessed. '{word}' is an inccorect guess for a word. ")
         else:
+            self.game_won = True
             print(f"{word} is a correct guess for a word. ")
 
     def guess_a_letter(self, letter: str) -> None:
         # Check if letter is in a word
         if letter in self.word:
             # Check if letter was not guessed and append if so append to correct list
-            if letter not in self.correct:
+            if letter not in self.correct_letters:
                 print(f"'{letter}' is in a word. ")
-                self.correct.append(letter)
+                self.correct_letters.append(letter)
             else:
                 print(f"Already guessed. '{letter}' is in a word. ")
         else:
             # Check if letter was not already guessed
-            if letter not in self.inccorect:
+            if letter not in self.inccorect_letters:
                 print(f"'{letter}' is NOT in a word. ")
-                self.inccorect.append(letter)
+                self.inccorect_letters.append(letter)
                 self.score += 1
             else:
                 print(f"Already guessed. '{letter}' is NOT in a word. ")
@@ -171,15 +196,25 @@ class HangmanGame:
 
 
 def main() -> None:
-
     game = HangmanGame()
 
     while True:
-
         game.show_word()
         game.draw_hanged_man()
-
         game.get_guess_from_user()
+
+        if game.all_letters_guessed():
+            game.print_game_won()
+            break
+
+        if game.game_won:
+            game.print_game_won()
+            break
+
+        if game.score_is_6():
+            game.draw_hanged_man()
+            game.print_game_over()
+            break
 
 
 if __name__ == "__main__":
