@@ -27,8 +27,8 @@ class HangmanGame:
         word = rw.random_word(min_letter_count=min_letters)
         return word
 
-    def score_is_6(self) -> bool:
-        return self.score == 6
+    def score_is_7(self) -> bool:
+        return self.score == 7
 
     def print_game_over(self) -> None:
         print(f"GAME OVER! Word to guess was '{self.word}'. ")
@@ -169,9 +169,9 @@ class HangmanGame:
                     print("|", end="")
 
                 # Print right leg
-                elif self.score >= 6 and c == 4 and r == 7:
+                elif self.score >= 7 and c == 4 and r == 7:
                     print("\\", end="")
-                elif self.score >= 6 and c == 4 and r == 8:
+                elif self.score >= 7 and c == 4 and r == 8:
                     print("|", end="")
 
                 # Print whitespace

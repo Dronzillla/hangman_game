@@ -27,7 +27,7 @@ def main() -> None:
             game.print_game_won()
             break
 
-        if game.score_is_6():
+        if game.score_is_7():
             print(game.show_inccorect_letters())
             print(game.show_inccorect_words())
             game.draw_hanged_man()
